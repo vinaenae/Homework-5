@@ -1,0 +1,72 @@
+---
+title: "Homework 5"
+author: "Vinay Devarakonda"
+date: "2024-10-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(rvest)
+library(dplyr)
+WNBA_Stats_Sheet1_1_ <- read_csv("SDS 313/WNBA Stats - Sheet1 (1).csv")
+View(WNBA_Stats_Sheet1_1_)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+###Question 1:
+
+```{r}
+
+MinutesPlayed = as.numeric()
+wnba_players <- data.frame(
+  Player = WNBA_Stats_Sheet1_1_$Player,
+  MinutesPlayed = WNBA_Stats_Sheet1_1_$MP...5,
+  ThreePointPercentage = WNBA_Stats_Sheet1_1_$`3P%`
+)
+
+head(WNBA_Stats_Sheet1)
+
+player_count <- nrow(WNBA_Stats_Sheet1)
+player_count
+```
+
+###Question 2:
+
+```{r pressure, echo=FALSE}
+
+summary(wnba_players$ThreePointPercentage)
+
+# Histogram to show the distribution of three-point shooting percentage
+ggplot(wnba_players, aes(x = ThreePointPercentage)) +
+  geom_histogram(binwidth = 0.07, color = "black", fill = "lightblue") +
+  labs(title = "Distribution of Three-Point Shooting Percentage",
+       x = "Three-Point Shooting Percentage (%)", y = "Number of Players")
+
+
+
+```
+
+```{r}
+highlighted_data <- wnba_players |>
+  filter(Player == "Lindsay Allen")
+
+# Scatter plot for minutes played vs. three-point shooting percentage
+ggplot(wnba_players, aes(x = MinutesPlayed, y = ThreePointPercentage)) +
+  geom_point(color = "blue", size = 2) +
+  geom_point(data = highlighted_data, aes(x = MinutesPlayed, y = ThreePointPercentage), 
+             color = "red", size = 3) +
+  geom_text(data = highlighted_data, aes(x = MinutesPlayed, y = ThreePointPercentage, label = Player), 
+            color = "red", nudge_y = 0.5) +  # 'nudge_y' helps position the label slightly above the point
+  labs(title = "Minutes Played vs. Three-Point Shooting Percentage",
+       x = "Minutes Played", y = "Three-Point Shooting Percentage (%)")
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
